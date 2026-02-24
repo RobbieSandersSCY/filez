@@ -21,3 +21,27 @@ export async function getFolders() {
   const { rows: folders } = await db.query(sql);
   return folders;
 }
+
+export async function getFolderByID(id) {
+  const sql = `
+    SELECT
+      files.*,
+      folders.name AS folder_name
+    FROM
+      files
+      JOIN folders ON folders.id = files.folder_id
+    WHERE folder_id = $1
+  `;
+  // backwards
+  // const sql = `
+  //   SELECT
+  //     folders.*,
+  //     files.name AS file_name
+  //   FROM
+  //     folders
+  //     JOIN files ON files.folder_id = folders.id
+  //   WHERE id = $1
+  // `;
+  const { rows: folder } = await db.query(sql, [id]);
+  return [folder];
+}
