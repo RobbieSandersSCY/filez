@@ -23,25 +23,33 @@ export async function getFolders() {
 }
 
 export async function getFolderByID(id) {
+  // Outer SQL - pulls all folders matching given ID
+  // inner SQL - returns an array of files in the matching folder ID named FILES
   const sql = `
     SELECT
-      files.*,
-      folders.name AS folder_name
-    FROM
-      files
-      JOIN folders ON folders.id = files.folder_id
-    WHERE folder_id = $1
+      *,
+      (
+        SELECT json_agg(files)
+        FROM files
+        WHERE files.folder_id = folders.id
+      ) as files
+    FROM folders
+    WHERE id = $1
   `;
-  // backwards
+  const {
+    rows: [folder],
+  } = await db.query(sql, [id]);
+  return folder;
+
   // const sql = `
   //   SELECT
-  //     folders.*,
-  //     files.name AS file_name
+  //     files.*,
+  //     folders.name AS folder_name
   //   FROM
-  //     folders
-  //     JOIN files ON files.folder_id = folders.id
-  //   WHERE id = $1
+  //     files
+  //     JOIN folders ON folders.id = files.folder_id
+  //   WHERE folder_id = $1
   // `;
-  const { rows: folder } = await db.query(sql, [id]);
-  return [folder];
+  // const { rows: folder } = await db.query(sql, [id]);
+  // return [folder];
 }

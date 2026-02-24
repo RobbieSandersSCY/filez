@@ -3,6 +3,7 @@ const router = express.Router();
 export default router;
 
 import { getFolderByID, getFolders } from "#db/queries/folders";
+import { createFile } from "#db/queries/files";
 
 router.get("/", async (req, res) => {
   const folders = await getFolders();
@@ -17,8 +18,20 @@ router.param("id", async (req, res, next, id) => {
   next();
 });
 
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   res.send(req.folder);
 });
 
 // router post folders/:id/files
+// have no idea where the problem is
+// tried copying code over and it broke all functions
+router.post("/:id/files", async (req, res) => {
+  if (!req.body) return res.status(400).send("Request must have a body");
+
+  const { name, size } = req.body;
+  if (!name || !size)
+    return res.status(400).send("Request body must have: name, size");
+
+  const file = await createFile(name, size, req);
+  res.status(201).send(file);
+});

@@ -1,7 +1,7 @@
 import db from "#db/client";
 
 /**@returns the created file according to provided details */
-export async function createFile({ name, size, folder_id }) {
+export async function createFile({ name, size, folderId }) {
   const sql = `
   INSERT INTO files (name, size, folder_id)
   VALUES ($1, $2, $3)
@@ -9,7 +9,7 @@ export async function createFile({ name, size, folder_id }) {
   `;
   const {
     rows: [file],
-  } = await db.query(sql, [name, size, folder_id]);
+  } = await db.query(sql, [name, size, folderId]);
   return file;
 }
 
