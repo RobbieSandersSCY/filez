@@ -11,7 +11,7 @@ CREATE TABLE folders (
 CREATE TABLE files (
   id serial PRIMARY KEY,
   name text NOT NULL,
-  size int NOT NULL,
-  folder_id int NOT NULL REFERENCES folders(id) ON DELETE CASCADE,
+  size integer NOT NULL,
+  folder_id integer NOT NULL REFERENCES folders(id) ON DELETE CASCADE,
   UNIQUE (name, folder_id)
 );
