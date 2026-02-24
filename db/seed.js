@@ -1,5 +1,6 @@
 import db from "#db/client";
-import { createFolder, createFile } from "./queries/folders.js";
+import { createFolder } from "./queries/folders.js";
+import { createFile } from "./queries/files.js";
 
 await db.connect();
 await seed();
